@@ -11,13 +11,7 @@
 <h3 align="center">✦ 𝙏𝙊𝙍𝙐 𝘾𝙃𝘼𝙉 ✦</h3>
 
 <p align="center">
-    A simple Facebook Messenger Bot made by me (rX Abdullah).
-    <br />
-    <br />
-    <a href="https://github.com/rxabdullah007/Maria-v3/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/rxabdullah007/Maria-v3/pulls">Request Feature</a>
-    </p>
+    A simple Facebook Messenger Bot made by me (Kakashi).
 </p>
 
 <p align="center">
