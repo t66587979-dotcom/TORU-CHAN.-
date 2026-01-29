@@ -4,10 +4,10 @@ const path = require("path");
 
 module.exports.config = {
   name: "prefix",
-  version: "1.3.0",
+  version: "1.4.0",
   hasPermssion: 0,
   credits: "Rx",
-  description: "Show bot prefix info without using any prefix",
+  description: "Show bot prefix info without using any prefix (with animation)",
   commandCategory: "System",
   usages: "",
   cooldowns: 5,
@@ -19,6 +19,35 @@ module.exports.handleEvent = async function ({ api, event }) {
   if (!body) return;
 
   if (body.toLowerCase().trim() === "prefix") {
+
+    // ---------- PROGRESS BAR ANIMATION ----------
+    const progress = [
+      "█░░░░░░░░░ 10%",
+      "██░░░░░░░░ 20%",
+      "███░░░░░░░ 30%",
+      "████░░░░░░ 40%",
+      "█████░░░░░ 50%",
+      "██████░░░░ 60%",
+      "███████░░░ 70%",
+      "████████░░ 80%",
+      "█████████░ 90%",
+      "██████████ 100% ✨"
+    ];
+
+    let loading = await api.sendMessage(
+      `🔄 Fetching Prefix Info...\n\n${progress[0]}`,
+      threadID
+    );
+
+    for (let i = 1; i < progress.length; i++) {
+      await new Promise(r => setTimeout(r, 250));
+      await api.editMessage(
+        `🔄 Fetching Prefix Info...\n\n${progress[i]}`,
+        loading.messageID
+      );
+    }
+
+    // ---------- DATA ----------
     const ping = Date.now() - event.timestamp;
     const day = moment.tz("Asia/Dhaka").format("dddd");
 
@@ -64,9 +93,7 @@ module.exports.handleEvent = async function ({ api, event }) {
 `
     ];
 
-    // ===============================
-    // 💠 RANDOM GIF SELECTION
-    // ===============================
+    // ---------- RANDOM GIF ----------
     const gifList = [
       "abdullah2.gif",
       "abdullah1.gif",
@@ -78,10 +105,15 @@ module.exports.handleEvent = async function ({ api, event }) {
 
     const chosenFrame = frames[Math.floor(Math.random() * frames.length)];
 
+    // remove loading message
+    await api.unsendMessage(loading.messageID);
+
     return api.sendMessage(
       {
         body: chosenFrame,
-        attachment: fs.createReadStream(gifPath)
+        attachment: fs.existsSync(gifPath)
+          ? fs.createReadStream(gifPath)
+          : null
       },
       threadID,
       messageID

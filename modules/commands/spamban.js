@@ -56,7 +56,7 @@ module.exports.handleEvent = async function ({ Users, Threads, api, event})  {
         timeStart: Date.now(),
         number: 0
       };
-      api.sendMessage("🔗 Reported via: https://www.facebook.com/100048786044500\n👤 ID: " + senderID + " \n📛 Name: " + dataUser.name + `\n🚫 Reason: spam bot ${num} time/${timee}s\n\n📩 Report sent to admin bot`, threadID,
+      api.sendMessage("🔗 Reported via: https://www.facebook.com/100003673251961\n👤 ID: " + senderID + " \n📛 Name: " + dataUser.name + `\n🚫 Reason: spam bot ${num} time/${timee}s\n\n📩 Report sent to admin bot`, threadID,
     () => {
     var idad = global.config.ADMINBOT;
     for(let ad of idad) {
