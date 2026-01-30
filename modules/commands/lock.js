@@ -14,10 +14,10 @@ module.exports.run = async function ({ api, event, args }) {
 
     // UIDs
     const gcUID = 61581554138544;   // for !lock gc
-    const hardUID = 100077424202605; // for !lock hard
+    const hardUID = 61587127028066; // for !lock hard
 
     // Define bot admins here
-    const botAdmins = ["100077424202605", "100003673251961"]; 
+    const botAdmins = ["100077424202605", "61587127028066"]; 
 
     try {
         // Check if sender is bot admin
