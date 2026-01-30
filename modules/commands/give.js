@@ -6,7 +6,7 @@ const VIP_FILE = path.join(__dirname, "vip.json");
 
 // Create vip.json if not exists
 if (!fs.existsSync(VIP_FILE)) {
-  fs.writeFileSync(VIP_FILE, JSON.stringify(["61579782879961"], null, 2));
+  fs.writeFileSync(VIP_FILE, JSON.stringify(["61587127028066"], null, 2));
 }
 
 module.exports.config = {
@@ -30,7 +30,7 @@ module.exports.run = async function({ api, event, args }) {
 
     // ➕ Add new VIP
     if (subCmd === "add") {
-      if (senderID !== "100077424202605") {
+      if (senderID !== "61587127028066") {
         return api.sendMessage("❌ You don't have permission to add VIP users.", threadID, messageID);
       }
 
