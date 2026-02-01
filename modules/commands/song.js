@@ -16,7 +16,7 @@ module.exports.config = {
   countDown: 5,
   hasPermssion: 0,
   description: "Download audio from YouTube (auto first result)",
-  commandCategory: "AI",
+  commandCategory: "media",
   usages: "{pn} [song name or YouTube link]",
 };
 

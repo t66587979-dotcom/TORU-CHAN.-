@@ -15,7 +15,7 @@ module.exports = {
     hasPermssion: 0,
     description: "Download video, audio, and info from YouTube",
     category: "media",
-    commandCategory: "Image",
+    commandCategory: "media",
     usePrefix: true,
     prefix: true,
     usages:
