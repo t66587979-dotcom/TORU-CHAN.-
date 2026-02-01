@@ -1,78 +1,126 @@
 /**
  * @author datoccho
- * @you can edit creditss freely it's your right as long as you are not human if you are human don't change creditss
+ * @You may edit the credits freely — it’s your right.
+ * As long as you are not human.
+ * If you are human, do not change the credits.
  */
+
 const fs = require("fs"),
       request = require("request"),
-       pathFile = __dirname + "/cache/";
+      pathFile = __dirname + "/cache/";
 
 module.exports.config = {
-    name: `dice`,
-    version: `1.0.2`,
+    name: "dice",
+    version: "1.0.2",
     hasPermssion: 0,
-    creditss: `ken`, //change language to en
-    description: `dice`,
-    commandCategory: `Game`,
-    usages: `[xỉu|tài] [số tiền tham gia]`,
+    creditss: "ken", // language changed to English
+    description: "Dice gambling game",
+    commandCategory: "Game",
+    usages: "[small | big] [bet amount]",
     cooldowns: 5
 };
+
 module.exports.onLoad = () => {
-  
-  if (!fs.existsSync(pathFile + "cache")) fs.mkdirSync(pathFile, { recursive: true });
-  
-  if (!fs.existsSync(pathFile + this.config.name +".gif")) request("https://i.imgur.com/cnoG4td.gif").pipe(fs.createWriteStream(pathFile + this.config.name +".gif"));
-}
-module.exports.run = async({
-    api, event, args, Currencies
-}) => {
-    const {
-        getData, increaseMoney, decreaseMoney
-    } = Currencies;
-    const {
-        createReadStream
-    } = require(`fs-extra`);
-    const {
-        threadID, messageID, senderID
-    } = event;
-    const axios = global.nodemodule[`axios`];
-    const fs = global.nodemodule[`fs-extra`];
-    const data = (await Currencies.getData(senderID))
-        .data || {};
+    if (!fs.existsSync(pathFile + "cache"))
+        fs.mkdirSync(pathFile, { recursive: true });
+
+    if (!fs.existsSync(pathFile + this.config.name + ".gif"))
+        request("https://i.imgur.com/cnoG4td.gif")
+            .pipe(fs.createWriteStream(pathFile + this.config.name + ".gif"));
+};
+
+module.exports.run = async ({ api, event, args, Currencies }) => {
+    const { getData, increaseMoney, decreaseMoney } = Currencies;
+    const { createReadStream } = require("fs-extra");
+    const { threadID, messageID, senderID } = event;
+
+    const data = (await Currencies.getData(senderID)).data || {};
+
     const getRandomIntInclusive = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-    var taixiucac = [`tài ${getRandomIntInclusive(11, 17)}`, `xỉu ${getRandomIntInclusive(4, 10)}`];
-    const rdm = taixiucac[Math.floor(Math.random() * taixiucac.length)]
+
+    // Dice result
+    var diceResult = [
+        `big ${getRandomIntInclusive(11, 17)}`,
+        `small ${getRandomIntInclusive(4, 10)}`
+    ];
+
+    const result = diceResult[Math.floor(Math.random() * diceResult.length)];
     const money = (await getData(senderID)).money;
-    var moneyBet = parseInt(args[1]) ? parseInt(args[1]) : money; //:))
-    var thang = moneyBet * 2;
-    const tax = thang * 5 / 100;
-    const tong = thang - tax;
-    if (args[0] != "talent" && args[0] != "roll")
-        return api.sendMessage('Not the right format.\nThe talent/fainting.', threadID, messageID);
+
+    // Bet amount (default = all money)
+    var moneyBet = parseInt(args[1]) ? parseInt(args[1]) : money;
+    var winMoney = moneyBet * 2;
+    const tax = winMoney * 5 / 100;
+    const finalMoney = winMoney - tax;
+
+    if (args[0] !== "big" && args[0] !== "small")
+        return api.sendMessage(
+            "Wrong format.\nUse: big or small.",
+            threadID,
+            messageID
+        );
+
     if (isNaN(moneyBet) || moneyBet < 50)
-        return api.sendMessage('Bet amounts under $50', threadID, messageID);
+        return api.sendMessage(
+            "Minimum bet amount is $50.",
+            threadID,
+            messageID
+        );
+
     if (moneyBet > money)
-        return api.sendMessage('Your balance is not enough.', threadID, messageID);
-  //if (args[1] == "tất" && args[2] == "tay" || args[1] == moneyBet) {
-        api.sendMessage({
-            body: '🎲Tossing the dice ...',
-          attachment: fs.createReadStream(__dirname + `/cache/${this.config.name}.gif`)
-        }, threadID, (err, info) => {
+        return api.sendMessage(
+            "Your balance is not enough.",
+            threadID,
+            messageID
+        );
+
+    api.sendMessage(
+        {
+            body: "🎲 Rolling the dice...",
+            attachment: fs.createReadStream(
+                __dirname + `/cache/${this.config.name}.gif`
+            )
+        },
+        threadID,
+        (err, info) => {
             if (err) console.log(err);
+
             setTimeout(() => {
                 api.unsendMessage(info.messageID);
-                if (args[0].toLocaleLowerCase() == rdm.slice(0, 3)) {
-                    return api.sendMessage({
-                        body: `Bookmakers out: ${rdm}\nYou choose: ${args[0].toLocaleLowerCase()}\nYou win and get ${thang}$\n And subtract the 5% tax of ${ladder} is ${tax}\nSau when deducting the rent the amount you receive is ${tong}\nThe amount in your account is:${money + tong}$`
-                    }, threadID, () => Currencies.increaseMoney(senderID, tong), messageID);
-                } else if (args[0].toLocaleLowerCase() != rdm.slice(0, 3)) {
-                    return api.sendMessage({
-                        body: `\nThe output: ${rdm}\nYou choose: ${args[0].toLocaleLowerCase()}\nYou lose! and deducted ${moneyBet ? moneyBet : money}$\nThe remaining money in your account is ${money - moneyBet}$`
-                    }, threadID, () => Currencies.decreaseMoney(senderID, moneyBet), messageID);
+
+                if (args[0].toLowerCase() === result.slice(0, 3)) {
+                    return api.sendMessage(
+                        {
+                            body:
+                                `Dice result: ${result}\n` +
+                                `You chose: ${args[0].toLowerCase()}\n` +
+                                `You WIN and get ${winMoney}$\n` +
+                                `5% tax deducted: ${tax}$\n` +
+                                `Final amount received: ${finalMoney}$\n` +
+                                `Your new balance: ${money + finalMoney}$`
+                        },
+                        threadID,
+                        () => increaseMoney(senderID, finalMoney),
+                        messageID
+                    );
                 } else {
-                    return api.sendMessage(`Lỗi gòi đéo biết fix đâu ${err}`, threadID, messageID);
+                    return api.sendMessage(
+                        {
+                            body:
+                                `Dice result: ${result}\n` +
+                                `You chose: ${args[0].toLowerCase()}\n` +
+                                `You LOSE and lost ${moneyBet}$\n` +
+                                `Remaining balance: ${money - moneyBet}$`
+                        },
+                        threadID,
+                        () => decreaseMoney(senderID, moneyBet),
+                        messageID
+                    );
                 }
             }, 3000);
-        }, messageID);
-}
+        },
+        messageID
+    );
+};
