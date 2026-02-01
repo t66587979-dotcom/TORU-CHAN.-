@@ -1,110 +1,84 @@
 module.exports.config = {
     name: "setmoney",
-    version: "0.0.1",
-    hasPermssion: 2,  // Admin only
-    credits: "Raiden Makoto × Hridoy (English by Grok)",
-    description: "Change the money balance of yourself or a tagged user",
-    commandCategory: "Game",
-    usages: "<me / tag / uid> [amount / del]",
+    version: "1.2.0",
+    hasPermssion: 2,
+    credits: "Hridoy × Mirai Stable",
+    description: "Admin money control (safe & stable)",
+    commandCategory: "Economy",
+    usages: "me | @tag | uid <id> <amount> | del @tag",
     cooldowns: 5
 };
 
-module.exports.run = async function({ api, event, args, Currencies, Users }) {
-    const { threadID, messageID, senderID, mentions, body } = event;
-    const prefix = ";";  // Change this if your bot prefix is different
+module.exports.run = async function ({ api, event, args, Currencies, Users }) {
+    const { threadID, messageID, senderID, mentions } = event;
 
-    if (args.length === 0) {
-        return api.sendMessage("[SETMONEY] → Incorrect syntax. Usage: setmoney <me/tag/uid> [amount/del]", threadID, messageID);
-    }
-
-    // Helper to send message with callback
-    const sendAndUpdate = async (msg, callback) => {
-        api.sendMessage(msg, threadID, async () => {
-            try {
-                await callback();
-            } catch (err) {
-                console.error("Money update error:", err);
-                api.sendMessage("[SETMONEY] → Failed to update balance!", threadID, messageID);
-            }
-        }, messageID);
-    };
-
-    // Case 1: setmoney me <amount>
-    if (args[0] === "me") {
-        if (args.length < 2) return api.sendMessage("[SETMONEY] → Please provide an amount to add!", threadID, messageID);
-        const amount = parseInt(args[1]);
-        if (isNaN(amount) || amount <= 0) return api.sendMessage("[SETMONEY] → Invalid amount!", threadID, messageID);
-
-        return sendAndUpdate(
-            `[SETMONEY] → Added ${amount} to your balance.`,
-            () => Currencies.increaseMoney(senderID, amount)
+    if (!args[0]) {
+        return api.sendMessage(
+`❌ Usage:
+.setmoney me <amount>
+.setmoney @user <amount>
+.setmoney uid <id> <amount>
+.setmoney del @user`,
+            threadID,
+            messageID
         );
     }
 
-    // Case 2: setmoney del (me / tag)
+    /* ========= DELETE FIRST ========= */
     if (args[0] === "del") {
-        if (args[1] === "me") {
-            const userData = await Currencies.getData(senderID);
-            const current = userData.money || 0;
-            if (current <= 0) return api.sendMessage("[SETMONEY] → Your balance is already 0.", threadID, messageID);
+        if (Object.keys(mentions).length === 0)
+            return api.sendMessage("❌ Please tag a user to clear balance", threadID, messageID);
 
-            return sendAndUpdate(
-                `[SETMONEY] → Cleared your entire balance.\n💸 Amount cleared: ${current}`,
-                () => Currencies.decreaseMoney(senderID, current)
-            );
-        }
+        const uid = Object.keys(mentions)[0];
+        const data = await Currencies.getData(uid);
+        const money = data.money || 0;
 
-        // del for tagged user
-        if (Object.keys(mentions).length === 0) {
-            return api.sendMessage("[SETMONEY] → Please tag someone to clear their balance.", threadID, messageID);
-        }
-
-        const mentionID = Object.keys(mentions)[0];
-        const mentionName = mentions[mentionID].replace("@", "");
-        const userData = await Currencies.getData(mentionID);
-        const current = userData.money || 0;
-        if (current <= 0) return api.sendMessage(`[SETMONEY] → ${mentionName}'s balance is already 0.`, threadID, messageID);
-
-        return sendAndUpdate(
-            `[SETMONEY] → Cleared ${mentionName}'s entire balance.\n💸 Amount cleared: ${current}`,
-            () => Currencies.decreaseMoney(mentionID, current)
-        );
+        await Currencies.decreaseMoney(uid, money);
+        return api.sendMessage(`🗑 Balance cleared (${money}$)`, threadID, messageID);
     }
 
-    // Case 3: setmoney <tag> <amount>
-    if (Object.keys(mentions).length > 0) {
-        if (args.length < 2) return api.sendMessage("[SETMONEY] → Please provide an amount to add!", threadID, messageID);
-        const amount = parseInt(args[args.length - 1]);  // Last arg as amount
-        if (isNaN(amount) || amount <= 0) return api.sendMessage("[SETMONEY] → Invalid amount!", threadID, messageID);
+    /* ========= ME ========= */
+    if (args[0] === "me") {
+        const amount = parseInt(args[1]);
+        if (isNaN(amount) || amount <= 0)
+            return api.sendMessage("❌ Invalid amount", threadID, messageID);
 
-        const mentionID = Object.keys(mentions)[0];
-        const mentionName = mentions[mentionID].replace("@", "");
-
-        return sendAndUpdate(
-            `[SETMONEY] → Added ${amount} to ${mentionName}'s balance.`,
-            () => Currencies.increaseMoney(mentionID, amount)
-        );
+        await Currencies.increaseMoney(senderID, amount);
+        return api.sendMessage(`✅ Added ${amount}$ to your balance`, threadID, messageID);
     }
 
-    // Case 4: setmoney uid <userID> <amount>
+    /* ========= UID ========= */
     if (args[0] === "uid") {
-        if (args.length < 3) return api.sendMessage("[SETMONEY] → Usage: setmoney uid <userID> <amount>", threadID, messageID);
         const uid = args[1];
         const amount = parseInt(args[2]);
-        if (isNaN(amount) || amount <= 0) return api.sendMessage("[SETMONEY] → Invalid amount!", threadID, messageID);
 
-        let name = "User";
+        if (!uid || isNaN(amount) || amount <= 0)
+            return api.sendMessage("❌ Usage: .setmoney uid <id> <amount>", threadID, messageID);
+
+        await Currencies.increaseMoney(uid, amount);
+
+        let name = uid;
         try {
-            const userData = await Users.getData(uid);
-            name = userData.name || "User";
-        } catch (e) {}
+            const u = await Users.getData(uid);
+            name = u.name || uid;
+        } catch {}
 
-        return sendAndUpdate(
-            `[SETMONEY] → Added ${amount} to ${name}'s balance (UID: ${uid}).`,
-            () => Currencies.increaseMoney(uid, amount)
-        );
+        return api.sendMessage(`✅ Added ${amount}$ to ${name}`, threadID, messageID);
     }
 
-    // Default error
-    return api.sendMessage("[SETMONEY] → Incorrect syntax. Try: setmoney me <amount> | setmoney @user <amount> | setmoney del me/@user | setmoney uid <ID> <amount>", threadID, messageID);
+    /* ========= TAG ========= */
+    if (Object.keys(mentions).length > 0) {
+        const uid = Object.keys(mentions)[0];
+        const amount = parseInt(args[args.length - 1]);
+
+        if (isNaN(amount) || amount <= 0)
+            return api.sendMessage("❌ Invalid amount", threadID, messageID);
+
+        await Currencies.increaseMoney(uid, amount);
+        const name = mentions[uid].replace("@", "");
+
+        return api.sendMessage(`✅ Added ${amount}$ to ${name}`, threadID, messageID);
+    }
+
+    return api.sendMessage("❌ Invalid syntax", threadID, messageID);
 };
