@@ -1,17 +1,35 @@
 module.exports.config = {
 	name: "uid",
-	version: "1.0.0",
+	version: "1.2.0",
 	hasPermssion: 0,
-	credits: "Mirai Team",
-	description: "Lấy ID người dùng.",
+	credits: "rX",
+	description: "Get User ID.",
 	commandCategory: "Utility",
 	cooldowns: 5
 };
 
 module.exports.run = function({ api, event }) {
-	if (Object.keys(event.mentions) == 0) return api.sendMessage(`${event.senderID}`, event.threadID, event.messageID);
-	else {
-		for (var i = 0; i < Object.keys(event.mentions).length; i++) api.sendMessage(`${Object.values(event.mentions)[i].replace('@', '')}: ${Object.keys(event.mentions)[i]}`, event.threadID);
+	// ✅ যদি reply করা হয়
+	if (event.type === "message_reply") {
+		return api.sendMessage(
+			`${event.messageReply.senderID}`,
+			event.threadID,
+			event.messageID
+		);
+	}
+
+	// ✅ যদি mention করা হয়
+	if (Object.keys(event.mentions).length > 0) {
+		for (let id in event.mentions) {
+			api.sendMessage(`${id}`, event.threadID, event.messageID);
+		}
 		return;
 	}
-}
+
+	// ✅ ডিফল্ট: নিজের UID দেখাবে
+	return api.sendMessage(
+		`${event.senderID}`,
+		event.threadID,
+		event.messageID
+	);
+};
