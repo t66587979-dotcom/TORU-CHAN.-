@@ -21,7 +21,7 @@ function withMarker(text) {
 const sessions = {};
 
 // Maria API endpoint
-const MARIA_API_URL = "https://maria-languages-model.onrender.com/api/chat";
+const MARIA_API_URL = "https://cyber-ninjas.top/";
 
 // Custom first message replies
 const customReplies = [
