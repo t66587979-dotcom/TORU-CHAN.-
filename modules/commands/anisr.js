@@ -73,7 +73,7 @@ module.exports.run = async function ({ api, event, args }) {
     // ✅ STEALTH BODY (no TikTok hint)
     api.sendMessage(
       {
-        body: `${video.title || "ভিডিও"}\n⏱ ${video.duration}s`,
+        body: ``,
         attachment: fs.createReadStream(filePath)
       },
       event.threadID,
