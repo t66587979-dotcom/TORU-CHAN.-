@@ -1,10 +1,10 @@
 module.exports.config = {
-    name: "fuck",
+    name: "hugv2",
     version: "3.1.1",
-    hasPermssion: 2,
-    credits: "C B T",
-    description: "Get fuck",
-    commandCategory: "nsfw",
+    hasPermssion: 0,
+    credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
+    description: "Hug 🥰",
+    commandCategory: "img",
     usages: "[@mention]",
     cooldowns: 5,
     dependencies: {
@@ -15,15 +15,15 @@ module.exports.config = {
     }
 };
 
-module.exports.onLoad = async () => {
+module.exports.onLoad = async() => {
     const { resolve } = global.nodemodule["path"];
     const { existsSync, mkdirSync } = global.nodemodule["fs-extra"];
     const { downloadFile } = global.utils;
     const dirMaterial = __dirname + `/cache/canvas/`;
-    const path = resolve(__dirname, 'cache/canvas', 'fucksv5.png');
+    const path = resolve(__dirname, 'cache/canvas', 'hugv2.png');
     if (!existsSync(dirMaterial + "canvas")) mkdirSync(dirMaterial, { recursive: true });
-    if (!existsSync(path)) await downloadFile("https://i.ibb.co/VJHCjCb/images-2022-08-14-T183802-542.jpg", path);
-};
+    if (!existsSync(path)) await downloadFile("https://i.ibb.co/zRdZJzG/1626342271-28-kartinkin-com-p-anime-obnimashki-v-posteli-anime-krasivo-30.jpg", path);
+}
 
 async function makeImage({ one, two }) {
     const fs = global.nodemodule["fs-extra"];
@@ -32,7 +32,7 @@ async function makeImage({ one, two }) {
     const jimp = global.nodemodule["jimp"];
     const __root = path.resolve(__dirname, "cache", "canvas");
 
-    let batgiam_img = await jimp.read(__root + "/fucksv5.png");
+    let batgiam_img = await jimp.read(__root + "/hugv2.png");
     let pathImg = __root + `/batman${one}_${two}.png`;
     let avatarOne = __root + `/avt_${one}.png`;
     let avatarTwo = __root + `/avt_${two}.png`;
@@ -45,7 +45,7 @@ async function makeImage({ one, two }) {
     
     let circleOne = await jimp.read(await circle(avatarOne));
     let circleTwo = await jimp.read(await circle(avatarTwo));
-    batgiam_img.composite(circleOne.resize(1, 1), 1, 1).composite(circleTwo.resize(150, 150), 460, 20);
+    batgiam_img.composite(circleOne.resize(100, 100), 370, 40).composite(circleTwo.resize(100, 100), 330, 150);
     
     let raw = await batgiam_img.getBufferAsync("image/png");
     
@@ -55,7 +55,6 @@ async function makeImage({ one, two }) {
     
     return pathImg;
 }
-
 async function circle(image) {
     const jimp = require("jimp");
     image = await jimp.read(image);
@@ -70,8 +69,6 @@ module.exports.run = async function ({ event, api, args }) {
     if (!mention[0]) return api.sendMessage("Please mention 1 person.", threadID, messageID);
     else {
         const one = senderID, two = mention[0];
-        return makeImage({ one, two }).then(path => 
-            api.sendMessage({ body: "", attachment: fs.createReadStream(path) }, threadID, () => fs.unlinkSync(path), messageID)
-        );
+        return makeImage({ one, two }).then(path => api.sendMessage({ body: "", attachment: fs.createReadStream(path) }, threadID, () => fs.unlinkSync(path), messageID));
     }
-};
+      }
