@@ -5,7 +5,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "MrTomXxX",
   description: "Video",
-  commandCategory: "Hình ảnh",
+  commandCategory: "Media",
   usages: "sad vedio",
   cooldowns: 5,
   dependencies: {

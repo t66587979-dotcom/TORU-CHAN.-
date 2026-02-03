@@ -5,14 +5,14 @@ module.exports.config = {
   hasPermssion: 0, // 🔓 Public command
   credits: "Hridoy Khan + GPT Hellfire Upgrade 🔥",
   description: "Give a full-cooked, deadly funny roast 😈",
-  commandCategory: "fun",
+  commandCategory: "Tag Fun",
   usages: "roast [@tag or name]",
   cooldowns: 5,
 };
 
 module.exports.run = async function ({ api, event, args }) {
   // 🛡️ Boss Protection (যাদের roast করা যাবে না)
-  const bossIDs = ["100048786044500", "100001162111551"];
+  const bossIDs = ["61587127028066", "100061935903355"];
 
   const mentionIDs = Object.keys(event.mentions);
   const name = mentionIDs.length > 0

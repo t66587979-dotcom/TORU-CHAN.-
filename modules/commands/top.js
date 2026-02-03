@@ -5,7 +5,7 @@ module.exports.config = {
     hasPermssion: 0,
     description: "View top money or level in group or server",
     usages: "[boxmoney|boxlevel|svmoney|svlevel] + list length (default 10)",
-    commandCategory: "Group",
+    commandCategory: "Game",
     cooldowns: 5
 };
 

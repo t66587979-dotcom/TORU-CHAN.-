@@ -4,7 +4,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "Yae Miko",
   description: "Projec M4a",
-  commandCategory: "Image",
+  commandCategory: "nsfw",
   usages: "",
   cooldowns: 3,
   dependencies: {

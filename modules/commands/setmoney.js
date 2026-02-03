@@ -4,7 +4,7 @@ module.exports.config = {
     hasPermssion: 2,
     credits: "Hridoy × Mirai Ultra Fix",
     description: "Admin money control (FULL Mirai compatible)",
-    commandCategory: "Economy",
+    commandCategory: "Game",
     usages: "@tag <amount> | me <amount> | uid <id> <amount> | del @tag",
     cooldowns: 5
 };
