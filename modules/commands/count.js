@@ -4,7 +4,7 @@ module.exports.config = {
 	hasPermssion: 0, // Permission: 0 = all members, 1 = admin+, 2 = owner/admin
 	credits: "Raiden Ei", // Module author
 	description:"Count everything in the chat box", // Command description
-	commandCategory: "Box Chat", // Category
+	commandCategory: "Group", // Category
 	usages: "count message/admin/member/male/female/gei/allgroup/alluser", // Usage
 	cooldowns: 5,  
 	envConfig: {

@@ -4,7 +4,7 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "Hridoy × Mirai Stable",
     description: "Give money to another user",
-    commandCategory: "Economy",
+    commandCategory: "Game",
     usages: "@tag <amount>",
     cooldowns: 5
 };

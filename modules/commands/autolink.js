@@ -10,7 +10,7 @@ module.exports.config = {
     hasPermission: 0,
     description: "Auto download video with text + reaction",
     usePrefix: false,
-    commandCategory: "utility",
+    commandCategory: "Utility",
     cooldowns: 2
 };
 

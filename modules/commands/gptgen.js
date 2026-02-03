@@ -24,7 +24,7 @@ module.exports = {
  shortDescription: "Generate or edit images using text prompts",
  longDescription:
  "Generate a new image from a text prompt or edit an existing image by replying to it.",
- commandCategory: "image",
+ commandCategory: "AI",
  usages:
  "Reply to an image with your prompt or type: !gptgen <prompt>\nExamples:\n!gptgen a cyberpunk city\n!gptgen make me anime (reply to an image)"
  },

@@ -4,8 +4,8 @@ module.exports.config = {
  hasPermssion: 0,
  credits: "Hridoy",
  description: "attitude video",
- commandCategory: "attitudevideo",
- usages: "atdvdo",
+ commandCategory: "Media",
+ usages: "attitude",
  cooldowns: 00,
  dependencies: {
  "request":"",
