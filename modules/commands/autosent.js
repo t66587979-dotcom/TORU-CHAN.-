@@ -9,7 +9,7 @@ module.exports.config = {
   cooldowns: 3
 };
 
-let autosent = false; // 🔴 default OFF
+let autosent = true; // 🔴 default ON
 
 const nam = [
   {
