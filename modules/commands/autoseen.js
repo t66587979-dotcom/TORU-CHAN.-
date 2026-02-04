@@ -1,4 +1,4 @@
-let autoSeen = false;
+let autoSeen = true;
 
 module.exports.config = {
   name: "autoseen",
