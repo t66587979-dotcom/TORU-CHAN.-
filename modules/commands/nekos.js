@@ -2,10 +2,10 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 module.exports.config = {
   name: "nekos",
-  version: "1.0.0",
+  version: "1.0.1",
   hasPermssion: 0,
   credits: "nekosapi + Sabah",
-  description: "Random image from NekosAPI",
+  description: "Random image from NekosAPI (works!)",
   commandCategory: "Image",
   usages: "",
   cooldowns: 5
@@ -18,13 +18,18 @@ module.exports.run = async ({ api, event }) => {
     const res = await fetch(apiUrl);
     const data = await res.json();
 
-    // API response check
-    if (!data.url) {
+    // NekosAPI response structure check
+    // API return: { data: [ { url: "...", ... } ] }
+    let imageUrl;
+    if (data.url) {
+      imageUrl = data.url; // old style
+    } else if (data.data && data.data.length > 0 && data.data[0].url) {
+      imageUrl = data.data[0].url; // new style
+    } else {
       return api.sendMessage("❌ Image পাওয়া যায়নি API থেকে", event.threadID);
     }
 
-    const imageUrl = data.url;
-
+    // Send image
     return api.sendMessage(
       {
         body: "", // কোনো caption নাই
