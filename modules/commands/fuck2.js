@@ -1,6 +1,7 @@
 module.exports.config = {
     name: "fuck2",
     version: "3.1.1",
+    premium:true,
     hasPermssion: 2,
     credits: "C B T",
     description: "Get fuck",
