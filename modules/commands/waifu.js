@@ -1,10 +1,12 @@
 const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
 module.exports.config = {
     name: "waifu",
-    version: "1.1.0",
+    version: "1.2.0",
     hasPermssion: 0,
-    credits: "waifu.im × Mirai Fix by Hridoy",
+    credits: "waifu.im × Hard Fix by Hridoy",
     description: "Random waifu image দেয়",
     commandCategory: "anime",
     usages: "waifu",
@@ -17,30 +19,42 @@ module.exports.run = async function ({ api, event }) {
     api.setMessageReaction("⏳", messageID, () => {}, true);
 
     try {
+        // 1️⃣ Call API
         const res = await axios.get("https://api.waifu.im/search");
 
-        // 🔑 MAIN FIX: image url extract
-        const imageData = res.data.images?.[0];
-        if (!imageData || !imageData.url) {
-            throw new Error("Image URL not found");
+        if (!res.data?.images?.length) {
+            throw new Error("No image data");
         }
 
-        const imageStream = await global.utils.getStreamFromURL(imageData.url);
+        const imageURL = res.data.images[0].url;
 
+        // 2️⃣ Download image as buffer
+        const imgRes = await axios.get(imageURL, {
+            responseType: "arraybuffer"
+        });
+
+        // 3️⃣ Save temp file
+        const imgPath = path.join(__dirname, "waifu.jpg");
+        fs.writeFileSync(imgPath, imgRes.data);
+
+        // 4️⃣ Send image
         api.sendMessage(
             {
-                body: `💖 Waifu Found!\n🎨 Artist: ${imageData.artist?.name || "Unknown"}\n🔗 Source: ${imageData.source || "N/A"}`,
-                attachment: imageStream
+                body: "💖 Waifu Found!",
+                attachment: fs.createReadStream(imgPath)
             },
             threadID,
-            () => api.setMessageReaction("✅", messageID, () => {}, true)
+            () => {
+                api.setMessageReaction("✅", messageID, () => {}, true);
+                fs.unlinkSync(imgPath); // cleanup
+            }
         );
 
     } catch (err) {
-        console.error(err);
+        console.error("WAIFU ERROR:", err);
         api.setMessageReaction("❌", messageID, () => {}, true);
         api.sendMessage(
-            "⚠️ Waifu image আনতে সমস্যা হয়েছে। পরে আবার চেষ্টা করো।",
+            "⚠️ Waifu image আনতে সমস্যা হয়েছে (API/IMAGE ERROR)।",
             threadID,
             messageID
         );
