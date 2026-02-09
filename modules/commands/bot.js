@@ -24,7 +24,15 @@ const sessions = {};
 const MARIA_API_URL = "https://raw.githubusercontent.com/rxabdullah0007/rX-apis/main/xApis/rXallApi.json";
 
 // Custom first message replies
-const customReplies =[
+const customReplies = [
+  "বেশি Bot Bot করলে leave নিবো কিন্তু😒",
+  "🥛-🍍👈 -লে খাহ্..!😒",
+  "শুনবো না😼 তুমি আমাকে প্রেম করাই দাও নাই🥺",
+  "আমি আবাল দের সাথে কথা বলি না😒",
+  "এতো ডেকো না, প্রেমে পরে যাবো 🙈",
+  "বার বার ডাকলে মাথা গরম হয়ে যায়😑",
+  "𝐓𝐨𝐫 𝐧𝐚𝐧𝐢𝐫 𝐮𝐢𝐝 𝐦𝐞 𝐝𝐞 𝐤𝐡𝐚𝐢 𝐝𝐢 𝐚𝐦𝐢 🦆",
+  "এতো ডাকছিস কেন? গালি শুনবি নাকি? 🤬"
 ];
 
 module.exports.handleEvent = async function({ api, event, Users }) {
@@ -42,7 +50,12 @@ module.exports.handleEvent = async function({ api, event, Users }) {
     const rand = customReplies[Math.floor(Math.random() * customReplies.length)];
 
     const firstMessage =
-``;
+`╭──────•◈•──────╮
+    ʜᴇʏ ɪᴀᴍ ᴛᴏʀᴜ ᴄʜᴀɴ
+
+ ✰ Hi ${name}, 
+ 💌 ${rand}
+╰──────•◈•──────╯`;
 
     try {
       await api.sendTypingIndicatorV2(true, threadID);
