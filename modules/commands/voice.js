@@ -4,7 +4,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "Kakashi Hatake + Modified by Hridoy",
   description: "Emoji to cute voice 😍 (Thread On/Off)",
-  commandCategory: "noprefix",
+  commandCategory: "System",
   usages: "voice on/off",
   cooldowns: 0
 };
