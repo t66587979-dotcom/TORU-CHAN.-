@@ -9,7 +9,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "KAKASHI",
   description: "Edit picture with multiple filters",
-  commandCategory: "image",
+  commandCategory: "Image",
   usages: "[filter] + reply image",
   cooldowns: 5,
 };
