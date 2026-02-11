@@ -1,5 +1,5 @@
 module.exports.config = {
-    name: "hugv3",
+    name: "hug3",
     version: "7.3.1",
     hasPermssion: 0,
     credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
@@ -22,7 +22,7 @@ module.exports.onLoad = async() => {
     const dirMaterial = __dirname + `/cache/canvas/`;
     const path = resolve(__dirname, 'cache/canvas', 'hugv3.png');
     if (!existsSync(dirMaterial + "canvas")) mkdirSync(dirMaterial, { recursive: true });
-    if (!existsSync(path)) await downloadFile("https://i.imgur.com/7lPqHjw.jpg", path);
+    if (!existsSync(path)) await downloadFile("https://i.imgur.com/N1bIn4x.jpeg", path);
 }
 
 async function makeImage({ one, two }) {
