@@ -1,21 +1,21 @@
  module.exports.config = {
   name: "anh18",
   version: "1.0.0",
+  premium:true,
   hasPermssion: 0,
-  credits: "𝙈𝙧𝙏𝙤𝙢𝙓𝙭𝙓",
-  description: "",
+  credits: "Kakashi",
+  description: "Projec M4a.",
   commandCategory: "nsfw",
-  usages: "anh18",
-  cooldowns: 5,
+  usages: "",
+  cooldowns: 3,
   dependencies: {
     "request":"",
     "fs-extra":"",
     "axios":""
   }
-    
 };
 
-module.exports.run = async({api,event,args,Users,Threads,Currencies}) => {
+module.exports.run = async({api,event,args,client,Users,Threads,__GLOBAL,Currencies}) => {
 const axios = global.nodemodule["axios"];
 const request = global.nodemodule["request"];
 const fs = global.nodemodule["fs-extra"];
@@ -382,17 +382,6 @@ const fs = global.nodemodule["fs-extra"];
 "https://i.postimg.cc/J7Qvbzc1/zpbi-Yu-P1-WBTUrc.jpg",
 
   ];
-  var max = Math.floor(Math.random() * 382);  
-var min = Math.floor(Math.random() * 1);
-  var data = await Currencies.getData(event.senderID);
-  var exp =  data.exp;
-  var money = data.money
-      if(money < 800) api.sendMessage("800$ dear friend",event.threadID,event.messageID)
-          else {
-   Currencies.setData(event.senderID, options = {money: money - 800})
-   var callback = () => 
-   api.sendMessage({body:`Costs: 800$`,attachment: fs.createReadStream(__dirname + "/cache/1.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/1.jpg"), event.messageID);
-              api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-      return request(encodeURI(link[Math.floor(Math.random() * link.length)] + (max - min))).pipe(fs.createWriteStream(__dirname+"/cache/1.jpg")).on("close",() => callback());
-     }
+  var callback = () => api.sendMessage({body:`𝐩𝐚𝐧𝐭𝐢𝐞𝐬 𝐜𝐥𝐨𝐬𝐞\n𝗦𝗼̂́ 𝗮̉𝗻𝗵: ${link.length}`,attachment: fs.createReadStream(__dirname + "/cache/5.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/5.jpg"));	
+      return request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname+"/cache/5.jpg")).on("close",() => callback());
    };
