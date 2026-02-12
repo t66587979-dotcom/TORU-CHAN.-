@@ -1,51 +1,33 @@
-// modules/commands/waifu.js  (অথবা hentai.js)
+// modules/commands/waifu.js (or hentai.js - name it as you want, the 'name' in config will be the command)
 
 const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
 
 module.exports.config = {
-  name: "waifu2",
-  version: "1.1.0",
-  hasPermssion: 0,
-  credits: "Kakashi",
-  description: "Random waifu/neko/hentai pic (NSFW) from waifu.im",
+  name: "waifu2",  // Command: !waifu (or your prefix)
+  version: "1.0.0",
+  hasPermssion: 0,  // 0: anyone, 1: group admin, 2: bot admin
+  credits: "Hridoy",  // Your credit
+  description: "Random NSFW waifu or hentai pic from API",
   commandCategory: "nsfw",
-  usages: "[waifu | neko | hentai | mix]  (default: waifu)",
+  usages: "[waifu/hentai/neko]",  // Example: !waifu hentai
   cooldowns: 5
 };
 
 module.exports.run = async function({ api, event, args }) {
-  let tag = args[0] ? args[0].toLowerCase() : "waifu";
-
-  let includedTags = "waifu";  // default
-  let messageBody = "Random waifu pic! 😏";
-
-  if (tag === "neko") {
-    includedTags = "neko";
-    messageBody = "Random neko pic! 🐱🔞";
-  } else if (tag === "hentai") {
-    includedTags = "hentai";
-    messageBody = "Random hentai pic! 🔥😈";
-  } else if (tag === "mix" || tag === "all") {
-    // Mix: waifu + neko + hentai tags
-    includedTags = "waifu,neko,hentai";  // multiple tags দিলে random from any
-    messageBody = "Random mix waifu/neko/hentai pic! 🌶️";
-  } // else default waifu
+  const type = args[0] || "waifu","neko","blowjob","trap";  // Default to waifu, or pass hentai, neko etc.
+  
+  // Check if NSFW allowed? (Optional, Mirai doesn't have built-in NSFW check, add if needed)
+  // For now, assume it's okay.
 
   try {
-    // waifu.im API call
-    const apiUrl = `https://api.waifu.im/search?included_tags=${includedTags}&is_nsfw=true&gif=false`;
-    const res = await axios.get(apiUrl);
-    
-    if (!res.data.images || res.data.images.length === 0) {
-      throw new Error("No images found");
-    }
+    // Use waifu.pics API (simple)
+    const res = await axios.get(`https://api.waifu.pics/nsfw/${type}`);
+    const imgUrl = res.data.url;
 
-    const imgUrl = res.data.images[0].url;  // first image
-
-    // Download to temp
-    const imgPath = path.join(__dirname, 'cache', `waifu_${Date.now()}.jpg`);
+    // Download image to temp file
+    const imgPath = path.join(__dirname, 'cache', `${type}.jpg`);
     const writer = fs.createWriteStream(imgPath);
     const imgRes = await axios.get(imgUrl, { responseType: 'stream' });
     imgRes.data.pipe(writer);
@@ -55,13 +37,13 @@ module.exports.run = async function({ api, event, args }) {
       writer.on('error', reject);
     });
 
-    // Send
+    // Send image
     api.sendMessage({
-      body: messageBody,
+      body: `Random ${type} pic! 😏`,
       attachment: fs.createReadStream(imgPath)
-    }, event.threadID, () => fs.unlinkSync(imgPath), event.messageID);
+    }, event.threadID, () => fs.unlinkSync(imgPath), event.messageID);  // Delete after send
 
   } catch (err) {
-    api.sendMessage(`Error: ${err.message || "API issue"}. Try again later! 😅`, event.threadID, event.messageID);
+    api.sendMessage(`Error: ${err.message}. Try again!`, event.threadID, event.messageID);
   }
 };
