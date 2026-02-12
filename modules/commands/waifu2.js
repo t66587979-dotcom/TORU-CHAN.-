@@ -5,12 +5,12 @@ const fs = require('fs-extra');
 const path = require('path');
 
 module.exports.config = {
-  name: "waifu",
+  name: "waifu2",
   version: "1.2.0",
   hasPermssion: 0,
-  credits: "Grok AI",
+  credits: "Hridoy",
   description: "Random NSFW pic from waifu.pics (waifu/neko/trap/blowjob) - random if no type given",
-  commandCategory: "NSFW",
+  commandCategory: "nsfw",
   usages: "[waifu | neko | trap | blowjob]  (no arg = random category)",
   cooldowns: 5
 };
